@@ -73,6 +73,7 @@ Part 4: State Machines & Data Models
 ## Configuration Storage Strategy
 
 > **2026-01-26 Update**: All runtime configuration is stored in PostgreSQL, managed via Web UI.
+> **Key bootstrap rule**: If `ENCRYPTION_KEY` or `SESSION_SECRET` is missing at startup, generate strong random keys and persist them in PostgreSQL. External key or env var overrides DB value. Rotation deferred to RFC-0016.
 
 | Configuration Type | Storage | Management |
 |--------------------|---------|------------|

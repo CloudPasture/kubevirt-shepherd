@@ -6,6 +6,18 @@
 
 ---
 
+## Amendments by Subsequent ADRs
+
+> ⚠️ **Notice**: The following sections have been amended by subsequent ADRs.
+> The original decisions above remain **unchanged for historical reference**.
+
+### ADR-0026: Auth Provider Naming (2026-01-30)
+
+| Original Section | Status | Amendment Details | See Also |
+|------------------|--------|-------------------|----------|
+| §22.6 IdP Configuration Schema (idp_config) | **AMENDED** | Canonical table name is `auth_providers`; `idp_configs` is treated as an alias in docs | [ADR-0026](./ADR-0026-idp-config-naming.md) |
+
+
 ## Context
 
 ### Problem Statement

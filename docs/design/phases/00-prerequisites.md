@@ -103,6 +103,25 @@ kubevirt-shepherd-go/
 | Shared connection pool | ADR-0012: Ent + River + sqlc share same pgxpool |
 | PostgreSQL for sessions | Redis removed, sessions stored in PostgreSQL |
 
+### Deployment-time Configuration (config.yaml / env vars)
+
+| Variable | Required | Description | Example |
+|----------|----------|-------------|---------|
+| `DATABASE_URL` | ✅ | PostgreSQL connection string | `postgres://user:pass@host:5432/dbname` |
+| `SERVER_PORT` | ❌ | HTTP server port (default: 8080) | `8080` |
+| `LOG_LEVEL` | ❌ | Logging level (default: info) | `debug`, `info`, `warn`, `error` |
+| `ENCRYPTION_KEY` | ❌ | AES-256-GCM key for sensitive data (strongly recommended) | 32-byte random key |
+| `SESSION_SECRET` | ❌ | JWT signing secret (strongly recommended) | Random 256-bit key (32 bytes) |
+
+**Auto-generation rule**:
+- If `ENCRYPTION_KEY` or `SESSION_SECRET` is missing, generate strong random keys on first boot and persist them in PostgreSQL.
+- External key or env var overrides DB value.
+- Rotation deferred to RFC-0016.
+
+**Key length guidance**:
+- For HMAC JWT signing (HS256/HS384/HS512), use key length at least the hash output size (e.g., 256 bits for HS256). See RFC 7518: https://www.rfc-editor.org/rfc/rfc7518
+- For secrets storage and rotation practices, see OWASP Secrets Management: https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html
+
 ### Configuration Sources (Priority)
 
 1. Environment variables (highest)
@@ -392,4 +411,3 @@ The vanity import server must be deployed before external users can import the m
 - [ ] Domain DNS configured
 - [ ] Vanity import server deployed
 - [ ] `go get` verification passed
-

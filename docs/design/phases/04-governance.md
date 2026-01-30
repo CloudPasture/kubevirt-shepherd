@@ -668,6 +668,27 @@ If >50% of resources detected as ghosts, halt and alert.
 
 ---
 
+## External Approval Systems (V1 Config + Callback Validation)
+
+> **Source of truth**: [master-flow Stage 2.E](../interaction-flows/master-flow.md#stage-2-e) and [master-flow External Approval Integration](../interaction-flows/master-flow.md#external-approval-system-integration-v1).
+
+### Schema (external_approval_systems)
+
+> **Reference implementation**: [examples/domain/external_approval_system.go](../examples/domain/external_approval_system.go)
+
+### Security Requirements (Best Practice)
+
+- HTTPS required for webhook URLs.
+- Verify signature using shared secret and constant-time comparison.
+- Include a timestamp in the signed payload and reject stale requests to prevent replay.
+- Store webhook secrets encrypted at rest (ADR-0019 §3).
+
+References:
+- https://docs.github.com/en/webhooks/using-webhooks/validating-webhook-deliveries
+- https://docs.stripe.com/webhooks/test
+
+---
+
 ## Related Documentation
 
 - [examples/domain/event.go](../examples/domain/event.go) - Event pattern
@@ -720,4 +741,3 @@ If >50% of resources detected as ghosts, halt and alert.
 # CI validation: scripts/check-sqlc-usage.sh
 # Fails build if sqlc imported outside whitelist
 ```
-
