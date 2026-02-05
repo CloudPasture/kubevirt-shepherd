@@ -1,9 +1,8 @@
 # Master Interaction Flow
 
 > **Status**: Stable (ADR-0017, ADR-0018 Accepted)  
-> **Version**: 1.1  
-> **Created**: 2026-01-28  
-> **Last Updated**: 2026-02-05  
+> **Version**: 1.0  
+> **Date**: 2026-01-28  
 > **Language**: English (Canonical Version)  
 > **Source**: Extracted from ADR-0018 Appendix
 >
@@ -105,7 +104,6 @@ database development.
 | **End Character** | MUST end with a letter or digit |
 | **Consecutive Hyphens** | MUST NOT contain `--` (reserved for Punycode) |
 | **Length** | System/Service/Namespace: max 15 chars each (ADR-0015 §16) |
-| **Reserved Names** | `default`, `system`, `admin`, `root`, `internal`, prefixes `kube-*`, `kubevirt-shepherd-*`. See [01-contracts.md §1.1](../phases/01-contracts.md#11-naming-constraints-adr-0019). |
 
 **Applies to**: System name, Service name, Namespace name, VM name components.
 
@@ -229,9 +227,7 @@ See ADR-0023 §1 for complete cache lifecycle diagram.
 
 ### Stage 1.5: First Deployment Bootstrap {#stage-1-5}
 
-> **Added 2026-01-26**: First deployment flow for configuration storage strategy.
->
-> **Detailed Rules**: See [ADR-0025 (Bootstrap Secrets)](../../adr/ADR-0025-secret-bootstrap.md) for secrets priority and auto-generation, [01-contracts.md §3.2.2](../phases/01-contracts.md#322-system-secrets-table-adr-0025) for implementation details.
+> **Added 2026-01-26**: First deployment flow for configuration storage strategy
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────────────────┐
@@ -268,14 +264,26 @@ See ADR-0023 §1 for complete cache lifecycle diagram.
 │  │  SESSION_SECRET=<32-byte-random>         # optional, strongly recommended                │ │
 │  └────────────────────────────────────────────────────────────────────────────────────────┘ │
 │                                                                                              │
-│  ⚡ Priority: env vars > config.yaml > defaults                                               │
-│  💡 Env vars always override config.yaml (12-factor app principle)                            │
+│  ⚡ **Single Priority Chain** (IMPORTANT - avoid ambiguity):                                   │
+│  ┌────────────────────────────────────────────────────────────────────────────────────────┐ │
+│  │  Configuration Type    │  Priority Chain (highest → lowest)                            │ │
+│  │  ──────────────────────┼─────────────────────────────────────────────────────────────  │ │
+│  │  General config        │  env vars → config.yaml → code defaults                       │ │
+│  │  (ports, log level)    │  e.g., SERVER_PORT env overrides config.yaml server.port      │ │
+│  │  ──────────────────────┼─────────────────────────────────────────────────────────────  │ │
+│  │  Secrets/Keys          │  env vars → DB-generated (system_secrets table)               │ │
+│  │  (encryption, session) │  If ENCRYPTION_KEY env set → use it (no DB generation)        │ │
+│  │                        │  If ENCRYPTION_KEY not set → auto-generate and store in DB    │ │
+│  │  ──────────────────────┼─────────────────────────────────────────────────────────────  │ │
+│  │  🔮 V2+ (RFC-0017)     │  External KMS → env vars → DB-generated                       │ │
+│  └────────────────────────────────────────────────────────────────────────────────────────┘ │
+│                                                                                              │
+│  ⚠️ **Key Principle**: config.yaml is NOT a source for secrets (12-factor app compliance).   │
+│     Secrets must come from: env vars OR DB-generated OR external secret manager.             │
 │                                                                                              │
 │  🔐 Auto-generation (ADR-0025 - if missing):                                                 │
 │  - Generate strong random ENCRYPTION_KEY and SESSION_SECRET on first boot (32-byte CSPRNG)   │
 │  - Persist to PostgreSQL `system_secrets` table (no ephemeral in-memory-only keys)           │
-│  - ⚡ V1 Priority: env vars > DB-generated (ADR-0025)                                        │
-│  - 🔮 Future Priority: KMS/secret manager > env vars > DB-generated (RFC-0017, not in V1)    │
 │  - If external key is introduced later, explicit re-encryption step required                 │
 │  - 🔄 Key rotation deferred to RFC-0016 (not in V1 scope)                                    │
 │                                                                                              │
@@ -1439,8 +1447,8 @@ Target: vm-001 (svc-redis → sys-shop)
 │  │  │  ⚠️ Warning: overcommit enabled in prod!   👈 prod-only warning                    │ │ │
 │  │  │     High load may impact VM performance.                                          │ │ │
 │  │  │                                                                                │ │ │
-│  │  │  🚨 Conflict: dedicated CPU + overcommit incompatible!                             │ │ │
-│  │  │     VM may fail to start. Disable overcommit or dedicated CPU.                     │ │ │
+│  │  │  ❌ ERROR: dedicated CPU + overcommit incompatible! ²                               │ │ │
+│  │  │     VM CANNOT start. Approval blocked. Fix: disable overcommit OR dedicated CPU.   │ │ │
 │  │  │                                                                                │ │ │
 │  │  └──────────────────────────────────────────────────────────────────────────────────┘ │ │
 │  │                                                                                       │ │
@@ -1454,9 +1462,14 @@ Target: vm-001 (svc-redis → sys-shop)
 │     - Disk config: always shown; admin can adjust                                           │
 │     - Resource allocation (request/limit): shown when size enables overcommit               │
 │                                                                                              │
-│  👆 Warning logic (informational only):                                                     │
-│     1. request ≠ limit and env=prod → ⚠️ yellow warning (prod overcommit)                    │
-│     2. overcommit + dedicated CPU → 🚨 red warning (severe conflict, VM may not start)       │
+│  👆 Validation logic:                                                                        │
+│     1. request ≠ limit and env=prod → ⚠️ yellow warning (informational only)                 │
+│     2. overcommit + dedicated CPU → ❌ ERROR (blocking) ²                                     │
+│        KubeVirt requires requests.cpu == limits.cpu for dedicatedCpuPlacement (Guaranteed QoS)│
+│                                                                                              │
+│  ² **Technical Constraint**: For `dedicatedCpuPlacement` to work, KubeVirt requires          │
+│    Guaranteed QoS class, meaning CPU request must equal limit. This is a hard K8s/KubeVirt   │
+│    constraint and cannot be bypassed. See KubeVirt compute documentation.                   │
 │                                                                                              │
 └─────────────────────────────────────────────────────────────────────────────────────────────┘
                                            │
@@ -1661,7 +1674,6 @@ Target: vm-001 (svc-redis → sys-shop)
 │  │      selected_cluster_id = 'cluster-a',     👈 admin-selected cluster (ADR-0017)    │       │
 │  │      selected_storage_class = 'ceph-rbd',   👈 admin-selected storage class          │       │
 │  │      template_snapshot = '{...}',          👈 template snapshot (ADR-0015 §17)     │       │
-│  │      instance_size_snapshot = '{...}',     👈 InstanceSize snapshot (ADR-0018)     │       │
 │  │      final_cpu_request = '4',              👈 final CPU request (after overcommit)│       │
 │  │      final_cpu_limit = '8',                                                       │       │
 │  │      final_mem_request = '16Gi',           👈 final memory request                 │       │
