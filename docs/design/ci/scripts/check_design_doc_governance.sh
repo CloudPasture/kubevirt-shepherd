@@ -34,92 +34,88 @@ check_file_exists "docs/design/database/migrations.md"
 check_file_exists "docs/design/traceability/master-flow.json"
 
 # Retired path must not be used as markdown link target in design/i18n/adr docs.
-# Exclude docs/design/frontend/ directory entirely, and exclude ./FRONTEND.md within frontend/ itself.
-if grep -rn --include='*.md' \
-  -E '\]\((docs/design/FRONTEND\.md|\.\./FRONTEND\.md|\.\./design/FRONTEND\.md|\.\./\.\./\.\./\.\./design/FRONTEND\.md)\)' \
-  docs/design docs/i18n docs/adr \
-  --exclude-dir='docs/design/frontend' \
-  | grep -v 'ADR-0030-' >"${legacy_refs_file}"; then
+if rg -n "\]\((docs/design/FRONTEND\.md|\.\./FRONTEND\.md|\.\./design/FRONTEND\.md|\.\./\.\./\.\./\.\./design/FRONTEND\.md)\)" docs/design docs/i18n docs/adr \
+  --glob '!docs/design/frontend/**' \
+  --glob '!docs/adr/ADR-0030-*.md' >"${legacy_refs_file}"; then
   cat "${legacy_refs_file}" >&2
   fail "Found legacy FRONTEND.md path references"
 fi
 
 # Canonical link checks
-grep -qF './frontend/README.md' docs/design/README.md \
+rg -q "\[frontend/README\.md\]\(\./frontend/README\.md\)" docs/design/README.md \
   || fail "docs/design/README.md must link to ./frontend/README.md"
 
-grep -qF './frontend/FRONTEND.md' docs/design/README.md \
+rg -q "\[frontend/FRONTEND\.md\]\(\./frontend/FRONTEND\.md\)" docs/design/README.md \
   || fail "docs/design/README.md must link to ./frontend/FRONTEND.md"
 
-grep -qF './database/README.md' docs/design/README.md \
+rg -q "\[database/README\.md\]\(\./database/README\.md\)" docs/design/README.md \
   || fail "docs/design/README.md must link to ./database/README.md"
 
-grep -qF '../frontend/FRONTEND.md' docs/design/interaction-flows/master-flow.md \
+rg -q "\.\./frontend/FRONTEND\.md" docs/design/interaction-flows/master-flow.md \
   || fail "master-flow.md must reference ../frontend/FRONTEND.md"
 
-grep -qF '../database/lifecycle-retention.md' docs/design/interaction-flows/master-flow.md \
+rg -q "\.\./database/lifecycle-retention\.md" docs/design/interaction-flows/master-flow.md \
   || fail "master-flow.md must reference ../database/lifecycle-retention.md"
 
-grep -qF '../database/README.md' docs/design/interaction-flows/README.md \
+rg -q "\.\./database/README\.md" docs/design/interaction-flows/README.md \
   || fail "interaction-flows/README.md must reference ../database/README.md"
 
 # Checklist governance statement
-grep -qF 'Global Single Standard' docs/design/checklist/README.md \
+rg -q "Global Single Standard" docs/design/checklist/README.md \
   || fail "checklist/README.md must declare CHECKLIST.md as global single standard"
 
 # Batch parent-child alignment markers
-grep -qF 'parent-child' docs/design/phases/04-governance.md \
+rg -q "parent-child" docs/design/phases/04-governance.md \
   || fail "04-governance.md must describe parent-child batch model"
 
-grep -qF 'two-layer rate limiting' docs/design/phases/04-governance.md \
+rg -q "two-layer rate limiting" docs/design/phases/04-governance.md \
   || fail "04-governance.md must describe two-layer rate limiting"
 
 # Master-flow (product truth) alignment for phase/checklist/examples
-grep -qF 'master-flow.md#stage-5e-batch-operations' docs/design/phases/04-governance.md \
+rg -q "master-flow\\.md#stage-5e-batch-operations" docs/design/phases/04-governance.md \
   || fail "04-governance.md must reference master-flow Stage 5.E"
 
-grep -qF 'master-flow.md#stage-5-d' docs/design/phases/04-governance.md \
+rg -q "master-flow\\.md#stage-5-d" docs/design/phases/04-governance.md \
   || fail "04-governance.md must reference master-flow Stage 5.D"
 
-grep -qF 'master-flow.md#stage-6-vnc-console-access' docs/design/phases/04-governance.md \
+rg -q "master-flow\\.md#stage-6-vnc-console-access" docs/design/phases/04-governance.md \
   || fail "04-governance.md must reference master-flow Stage 6"
 
-grep -qF 'adr-0015-vnc-v1-addendum' docs/adr/ADR-0015-governance-model-v2.md \
+rg -q "adr-0015-vnc-v1-addendum" docs/adr/ADR-0015-governance-model-v2.md \
   || fail "ADR-0015 must include V1 VNC scope addendum anchor"
 
-grep -qE 'ADR-0015.*18\.1.*addendum' docs/design/phases/04-governance.md \
+rg -q "ADR-0015.*18\\.1.*addendum" docs/design/phases/04-governance.md \
   || fail "04-governance.md must reference ADR-0015 §18.1 addendum for V1 VNC scope"
 
-grep -qF '/api/v1/vms/{vm_id}/vnc?token={vnc_jwt}' docs/design/interaction-flows/master-flow.md \
+rg -q "/api/v1/vms/\\{vm_id\\}/vnc\\?token=\\{vnc_jwt\\}" docs/design/interaction-flows/master-flow.md \
   || fail "master-flow.md must document canonical VNC websocket endpoint path"
 
-if grep -nF 'GET /vnc/{vm_id}?token={vnc_jwt}' docs/design/interaction-flows/master-flow.md docs/i18n/zh-CN/design/interaction-flows/master-flow.md >"${legacy_refs_file}" 2>/dev/null; then
+if rg -n "GET /vnc/\\{vm_id\\}\\?token=\\{vnc_jwt\\}" docs/design/interaction-flows/master-flow.md docs/i18n/zh-CN/design/interaction-flows/master-flow.md >"${legacy_refs_file}"; then
   cat "${legacy_refs_file}" >&2
   fail "VNC flow docs must not use legacy /vnc/{vm_id} endpoint path"
 fi
 
-grep -qF '/api/v1/vms/{vm_id}/console/request' docs/design/phases/04-governance.md \
+rg -q "/api/v1/vms/\\{vm_id\\}/console/request" docs/design/phases/04-governance.md \
   || fail "04-governance.md must use canonical VNC endpoint placeholder {vm_id}"
 
-grep -qF '/api/v1/vms/{vm_id}/vnc?token={jwt}' docs/design/phases/04-governance.md \
+rg -q "/api/v1/vms/\\{vm_id\\}/vnc\\?token=\\{jwt\\}" docs/design/phases/04-governance.md \
   || fail "04-governance.md must use canonical VNC websocket endpoint"
 
-if grep -nF 'tracked in Redis' docs/design/phases/04-governance.md >"${legacy_refs_file}"; then
+if rg -n "tracked in Redis" docs/design/phases/04-governance.md >"${legacy_refs_file}"; then
   cat "${legacy_refs_file}" >&2
   fail "04-governance.md must not require Redis for VNC token tracking"
 fi
 
-grep -qF 'POST /api/v1/approvals/{id}/cancel' docs/design/checklist/phase-4-checklist.md \
+rg -q "POST /api/v1/approvals/\\{id\\}/cancel" docs/design/checklist/phase-4-checklist.md \
   || fail "phase-4-checklist.md must use API-prefixed cancellation endpoint"
 
-grep -qF 'no active token revocation API' docs/design/checklist/phase-4-checklist.md \
+rg -q "no active token revocation API" docs/design/checklist/phase-4-checklist.md \
   || fail "phase-4-checklist.md must document V1 no-active-revocation scope"
 
-grep -qF 'StatusURL:' docs/design/examples/usecase/batch_approval.go \
-  && grep -qF '/api/v1/vms/batch/' docs/design/examples/usecase/batch_approval.go \
+rg -q "StatusURL:.*\"/api/v1/vms/batch/\"" docs/design/examples/usecase/batch_approval.go \
   || fail "batch_approval example must return canonical status_url path"
 
-if grep -nF 'VMStatusDeleted' docs/design/examples/domain/vm.go >"${legacy_refs_file}"; then
+if rg -n "VMStatusDeleted" docs/design/examples/domain/vm.go >"${legacy_refs_file}"; then
   cat "${legacy_refs_file}" >&2
   fail "docs/design/examples/domain/vm.go must not include persisted DELETED state"
 fi
@@ -185,8 +181,8 @@ PY
   fi
 
   # If canonical docs changed, require traceability manifest update in the same PR.
-  if printf '%s\n' "${changed_files}" | grep -qE '^(docs/design/interaction-flows/master-flow\.md|docs/design/phases/|docs/design/checklist/|docs/design/examples/|docs/adr/)'; then
-    if ! printf '%s\n' "${changed_files}" | grep -qxF 'docs/design/traceability/master-flow.json'; then
+  if printf '%s\n' "${changed_files}" | rg -q '^(docs/design/interaction-flows/master-flow\.md|docs/design/phases/|docs/design/checklist/|docs/design/examples/|docs/adr/)'; then
+    if ! printf '%s\n' "${changed_files}" | rg -q '^docs/design/traceability/master-flow\.json$'; then
       fail "Traceability manifest must be updated when master-flow/phases/checklists/examples/ADRs change: docs/design/traceability/master-flow.json"
     fi
   fi
