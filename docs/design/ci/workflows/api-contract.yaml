@@ -5,7 +5,7 @@
 #
 # Security Notes (ADR-0029):
 # - All third-party actions pinned to specific commit SHAs
-# - Runner version pinned (ubuntu-22.04, not ubuntu-latest)
+# - Runner version pinned (ubuntu-24.04, not ubuntu-latest)
 # - Minimal permissions following least privilege principle
 # - Dependabot configured for automated updates
 
@@ -34,7 +34,7 @@ jobs:
   # ─────────────────────────────────────────────────────────────────
   lint-spec:
     name: Lint OpenAPI Spec
-    runs-on: ubuntu-22.04  # Pin runner version
+    runs-on: ubuntu-24.04  # Pin runner version
     timeout-minutes: 10    # Prevent stuck workflows
     steps:
       # Pin to specific commit SHA for security
@@ -63,7 +63,7 @@ jobs:
   # ─────────────────────────────────────────────────────────────────
   breaking-changes:
     name: Detect Breaking Changes
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     if: github.event_name == 'pull_request'
     steps:
@@ -112,7 +112,7 @@ jobs:
   # ─────────────────────────────────────────────────────────────────
   generated-code-sync:
     name: Verify Generated Code Sync
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     needs: lint-spec
     steps:
@@ -176,7 +176,7 @@ jobs:
   # ─────────────────────────────────────────────────────────────────
   # contract-test:
   #   name: Contract Testing
-  #   runs-on: ubuntu-22.04
+  #   runs-on: ubuntu-24.04
   #   needs: [lint-spec, generated-code-sync]
   #   steps:
   #     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
