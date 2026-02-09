@@ -17,7 +17,7 @@ on:
       - 'api/**'
       - 'internal/api/**'
       - 'web/src/types/api.gen.ts'
-      - '.vacuum.yaml'  # ADR-0029: vacuum replaces spectral
+      - 'api/.vacuum.yaml'  # ADR-0029: vacuum replaces spectral
   push:
     branches: [main]
     paths:
@@ -52,7 +52,7 @@ jobs:
       # ADR-0029: Use vacuum instead of spectral (Go-native, 10x faster)
       - name: Run Vacuum Linting
         if: steps.check_file.outputs.exists == 'true'
-        uses: pb33f/vacuum-action@v2
+        uses: pb33f/vacuum-action@e0a6b0297ff1abcac6c415f2eba24fd9018cad58  # v2
         with:
           spec: api/openapi.yaml
           fail_severity: warn
@@ -92,7 +92,7 @@ jobs:
 
       - name: Check for Breaking Changes
         if: steps.check_file.outputs.exists == 'true' && env.base_exists == 'true'
-        uses: oasdiff/oasdiff-action/breaking@main
+        uses: oasdiff/oasdiff-action/breaking@1c611ffb1253a72924624aa4fb662e302b3565d3  # v0.0.21
         with:
           base: origin/${{ github.base_ref }}:api/openapi.yaml
           revision: api/openapi.yaml
@@ -101,7 +101,7 @@ jobs:
 
       - name: Generate Changelog
         if: steps.check_file.outputs.exists == 'true' && env.base_exists == 'true'
-        uses: oasdiff/oasdiff-action/changelog@main
+        uses: oasdiff/oasdiff-action/changelog@1c611ffb1253a72924624aa4fb662e302b3565d3  # v0.0.21
         with:
           base: origin/${{ github.base_ref }}:api/openapi.yaml
           revision: api/openapi.yaml
