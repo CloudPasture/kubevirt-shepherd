@@ -168,7 +168,7 @@ ci/
 | Practice | Requirement | Example |
 |----------|-------------|----------|
 | **Action Pinning** | Pin to commit SHA, not tags | `actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683` |
-| **Runner Pinning** | Use specific runner version | `ubuntu-22.04` (not `ubuntu-latest`) |
+| **Runner Pinning** | Use specific runner version | `ubuntu-24.04` (not `ubuntu-latest`) |
 | **Minimal Permissions** | Use `permissions:` block | `contents: read`, `pull-requests: read` |
 | **Timeout** | Set job timeout | `timeout-minutes: 10` |
 | **Dependabot** | Auto-update GitHub Actions | Configure `.github/dependabot.yml` |
