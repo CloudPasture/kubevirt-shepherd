@@ -85,7 +85,7 @@ rg -q "adr-0015-vnc-v1-addendum" docs/adr/ADR-0015-governance-model-v2.md \
   || fail "ADR-0015 must include V1 VNC scope addendum anchor"
 
 rg -q "ADR-0015.*18\\.1.*addendum" docs/design/phases/04-governance.md \
-  || fail "04-governance.md must reference ADR-0015 §18.1 addendum for V1 VNC scope"
+  || fail "04-governance.md must reference ADR-0015 \u00a718.1 addendum for V1 VNC scope"
 
 rg -q "/api/v1/vms/\\{vm_id\\}/vnc\\?token=\\{vnc_jwt\\}" docs/design/interaction-flows/master-flow.md \
   || fail "master-flow.md must document canonical VNC websocket endpoint path"
@@ -112,7 +112,7 @@ rg -q "POST /api/v1/approvals/\\{id\\}/cancel" docs/design/checklist/phase-4-che
 rg -q "no active token revocation API" docs/design/checklist/phase-4-checklist.md \
   || fail "phase-4-checklist.md must document V1 no-active-revocation scope"
 
-rg -q "StatusURL:.*\"/api/v1/vms/batch/\\"" docs/design/examples/usecase/batch_approval.go \
+rg -q 'StatusURL:.*"/api/v1/vms/batch/"' docs/design/examples/usecase/batch_approval.go \
   || fail "batch_approval example must return canonical status_url path"
 
 if rg -n "VMStatusDeleted" docs/design/examples/domain/vm.go >"${legacy_refs_file}"; then
