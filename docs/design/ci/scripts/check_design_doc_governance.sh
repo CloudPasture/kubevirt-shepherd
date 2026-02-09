@@ -34,8 +34,9 @@ check_file_exists "docs/design/database/migrations.md"
 check_file_exists "docs/design/traceability/master-flow.json"
 
 # Retired path must not be used as markdown link target in design/i18n/adr docs.
+# Exclude docs/design/frontend/ directory entirely, and exclude ./FRONTEND.md within frontend/ itself.
 if grep -rn --include='*.md' \
-  -E '\]\((docs/design/FRONTEND\.md|\.\./FRONTEND\.md|\./FRONTEND\.md|\.\./design/FRONTEND\.md|\.\./\.\./\.\./\.\./design/FRONTEND\.md)\)' \
+  -E '\]\((docs/design/FRONTEND\.md|\.\./FRONTEND\.md|\.\./design/FRONTEND\.md|\.\./\.\./\.\./\.\./design/FRONTEND\.md)\)' \
   docs/design docs/i18n docs/adr \
   --exclude-dir='docs/design/frontend' \
   | grep -v 'ADR-0030-' >"${legacy_refs_file}"; then
