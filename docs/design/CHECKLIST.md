@@ -42,10 +42,10 @@
 
 | Stage | Description | Alignment | Checklist Section | Design Doc Reference | Code Fix Priority |
 |-------|-------------|-----------|-------------------|----------------------|-------------------|
-| **Part 4** | State Machines & Data Models | ✅ 90% | [phase-2 §Anti-Corruption](checklist/phase-2-checklist.md#anti-corruption-layer) | [master-flow §Part 4](interaction-flows/master-flow.md#part-4-state-machines--data-models) | ~~P0~~ ✅ Done (2026-02-10) |
-| **5.A** | VM Request Submission | ✅ 90% | [phase-3 §UseCase](checklist/phase-3-checklist.md#usecase-layer-standards-clean-architecture) | [master-flow §5.A](interaction-flows/master-flow.md#stage-5a-user-submits-vm-request) | P2 — remove domain `PENDING` |
-| **5.B** | Admin Approval | ✅ 90% | [phase-4 §Approval](checklist/phase-4-checklist.md#approval-flow-governance-core) | [master-flow §5.B](interaction-flows/master-flow.md#stage-5b-admin-approval) | P3 — prod overcommit warning UX |
-| **5.C** | VM Creation Execution | ✅ 95% | [phase-4 §River Queue](checklist/phase-4-checklist.md#river-queue-task-system-adr-0006) | [master-flow §5.C](interaction-flows/master-flow.md#stage-5c-vm-creation-execution) | P3 — provider hard idempotency |
+| **Part 4** | State Machines & Data Models | ✅ 90% | [phase-2 §Anti-Corruption](checklist/phase-2-checklist.md#anti-corruption-layer) | [master-flow §Part 4](interaction-flows/master-flow.md#part-4-state-machines-data-models) | ~~P0~~ ✅ Done (2026-02-10) |
+| **5.A** | VM Request Submission | ✅ 90% | [phase-3 §UseCase](checklist/phase-3-checklist.md#usecase-layer-standards-clean-architecture) | [master-flow §5.A](interaction-flows/master-flow.md#stage-5-a) | P2 — remove domain `PENDING` |
+| **5.B** | Admin Approval | ✅ 90% | [phase-4 §Approval](checklist/phase-4-checklist.md#approval-flow-governance-core) | [master-flow §5.B](interaction-flows/master-flow.md#stage-5-b) | P3 — prod overcommit warning UX |
+| **5.C** | VM Creation Execution | ✅ 95% | [phase-4 §River Queue](checklist/phase-4-checklist.md#river-queue-task-system-adr-0006) | [master-flow §5.C](interaction-flows/master-flow.md#state-transitions-stage-5a-5c) | P3 — provider hard idempotency |
 | **5.D** | Delete Operations | ✅ 90% | [phase-4 §Delete](checklist/phase-4-checklist.md#delete-confirmation-mechanism-adr-0015-131) | [master-flow §5.D](interaction-flows/master-flow.md#stage-5d-delete-operations) | P2 — tombstone cleanup policy |
 | **5.E** | Batch Operations | ❌ 0% | [phase-4 §Batch](checklist/phase-4-checklist.md#batch-operations-adr-0015-19) | [master-flow §5.E](interaction-flows/master-flow.md#stage-5e-batch-operations) | P3 — future iteration |
 | **5.F** | Notification System | ✅ 85% | [phase-4 §Notification](checklist/phase-4-checklist.md#notification-system-adr-0015-20) | [master-flow §5.F](interaction-flows/master-flow.md#stage-5f-notification-system) | P3 — API+triggers+sender+frontend bell done; retention cleanup pending |

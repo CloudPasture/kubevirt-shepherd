@@ -85,8 +85,8 @@
 - [x] `/health/ready` checks:
   - [x] Database connection status
   - [x] **Worker Health**: — *Injection points ready*
-    - [x] River Worker heartbeat (Phase 4 injection) — *`SetRiverWorker()` ready, consumer deferred to [Phase 4](../phases/04-async-river.md)*
-    - [x] ResourceWatcher heartbeat (Phase 2 injection) — *`AddResourceWatcher()` ready, consumer deferred to [Phase 2](../phases/02-kubevirt-provider.md)*
+    - [x] River Worker heartbeat (Phase 4 injection) — *`SetRiverWorker()` ready, consumer deferred to [Phase 4](../phases/04-governance.md)*
+    - [x] ResourceWatcher heartbeat (Phase 2 injection) — *`AddResourceWatcher()` ready, consumer deferred to [Phase 2](../phases/02-providers.md)*
     - [x] Heartbeat timeout: Worker 60s, Watcher 120s
 
 ---
@@ -125,8 +125,8 @@ The following items are architecturally prepared but depend on packages/features
 |------|-----------|--------------|
 | `stdlib.OpenDBFromPool` for Ent | Ent ORM v0.14.5 | [Phase 1: Contracts](../phases/01-contracts.md) |
 | `openapi_validator.go` full impl | Complete OpenAPI spec | [Phase 1: Contracts](../phases/01-contracts.md) |
-| River stability (ADR-0008) | River Queue v0.30.2 | [Phase 4: Async](../phases/04-async-river.md) |
-| Session storage (scs) | Auth implementation | [Phase 3: Auth](../phases/03-auth-session.md) |
-| Admin seed (ADR-0018) | User model + auth | [Phase 3: Auth](../phases/03-auth-session.md) |
+| River stability (ADR-0008) | River Queue v0.30.2 | [Phase 4: Governance](../phases/04-governance.md) |
+| Session storage (scs) | Auth implementation | [Phase 5: Auth/API/Frontend](../phases/05-auth-api-frontend.md) |
+| Admin seed (ADR-0018) | User model + auth | [Phase 5: Auth/API/Frontend](../phases/05-auth-api-frontend.md) |
 | OpenAPI 3.1 compat check | 3.1-only features usage | When needed |
 | Traceability manifest CI | Real flow changes | [Phase 1: Contracts](../phases/01-contracts.md) |

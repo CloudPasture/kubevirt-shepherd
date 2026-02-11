@@ -46,7 +46,7 @@ Establish Go project infrastructure:
 | Lint config | `.golangci.yml` | ✅ | - |
 | Dockerfile | `Dockerfile` | ✅ | - |
 | Data seeding | `cmd/seed/main.go` | ✅ | - |
-| River migration | `migrations/river/` | ⏳ | *Deferred to [Phase 4](04-async-river.md) when River is introduced* |
+| River migration | `migrations/river/` | ⏳ | *Deferred to [Phase 4](04-governance.md) when River is introduced* |
 | Error handling | `internal/pkg/errors/errors.go` | ✅ | *Added: structured AppError types* |
 | Error middleware | `internal/api/middleware/error_handler.go` | ✅ | *Added: Gin centralized error handling* |
 | OpenAPI validator | `internal/api/middleware/openapi_validator.go` | ⏳ | *Placeholder; full impl in [Phase 1](01-contracts.md)* |
@@ -456,8 +456,8 @@ go run cmd/server/main.go
 - [ ] Docker image builds successfully — *Dockerfile ready; requires Docker daemon*
 - [x] `/health/live` returns 200 — *Verified via unit test*
 - [x] `/health/ready` checks database — *Handler ready with DB pool ping*
-- [ ] First startup auto-seeds admin account — *Placeholder ready; full impl in [Phase 3](03-auth-session.md)*
-- [ ] River migration tables created — *Deferred to [Phase 4](04-async-river.md)*
+- [ ] First startup auto-seeds admin account — *Placeholder ready; full impl in [Phase 5](05-auth-api-frontend.md)*
+- [ ] River migration tables created — *Deferred to [Phase 4](04-governance.md)*
 
 ---
 

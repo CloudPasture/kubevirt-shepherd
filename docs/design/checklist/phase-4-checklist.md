@@ -224,6 +224,7 @@
   - [x] `priority_tier` field in response (normal/warning/urgent) — `PriorityTier()` function
   - [x] Color coding: 0-3d normal, 4-7d yellow, 7+d red (ADR-0015 §11)
 - [x] **User Self-Cancellation** API (Gateway.Cancel validates requester)
+- [x] `POST /api/v1/approvals/{id}/cancel` documented as canonical self-cancellation endpoint
 - [x] **AuditLogger** implemented (`internal/governance/audit/logger.go`)
 - [x] **Approval API** endpoints complete — *Phase 5: `handlers/approval.go` ListPending/Approve/Reject/Cancel + `modules/approval.go`*
 - [ ] Policy matching logic implemented (deferred)
