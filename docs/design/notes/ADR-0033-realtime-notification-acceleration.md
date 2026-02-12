@@ -24,9 +24,13 @@ This note captures implementation impacts for the proposed ADR-0033 decision: ad
 ## Pending Changes (Not Yet Normative)
 
 - Affected docs:
+  - `docs/adr/ADR-0033-realtime-notification-acceleration.md` (decision and guardrails).
+  - `docs/adr/README.md` (ADR index update).
+  - `docs/design/traceability/master-flow.json` (Stage 5.F ADR mapping).
   - `docs/design/phases/04-governance.md` (notification section: add push-acceleration rollout notes).
   - `docs/design/checklist/phase-4-checklist.md` (new checklist item for listener lifecycle/reconnect and fallback validation).
   - `docs/design/CHECKLIST.md` (Stage 5.F progress notes update after implementation).
+  - `docs/design/interaction-flows/master-flow.md` and `docs/i18n/zh-CN/design/interaction-flows/master-flow.md` (update only after ADR acceptance; proposed phase keeps normative flow text unchanged).
 - Affected components:
   - `internal/infrastructure` (listener + reconnect loop + observability).
   - `internal/app/modules` (composition and lifecycle wiring).
