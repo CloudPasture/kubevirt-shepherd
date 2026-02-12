@@ -6,9 +6,10 @@ Provide a single-command local development workflow that starts and resets backe
 
 ## Entry Points
 
-- `./start-dev.sh` (root convenience wrapper)
+- `./start-dev.sh` (repository-root convenience wrapper)
 - `deploy/dev/start-dev.sh` (actual script)
 - Compose file: `deploy/dev/docker-compose.yml`
+- Run with a normal user account; no root user is required.
 
 ## Layout
 
