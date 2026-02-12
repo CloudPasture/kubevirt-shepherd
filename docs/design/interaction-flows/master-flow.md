@@ -2155,11 +2155,6 @@ Define notification behavior visible to users/admins for request, approval, and 
 - [04-governance.md §7 Audit Logging](../phases/04-governance.md#7-audit-logging)
 - [RFC-0018 §Proposed Solution](../../rfc/RFC-0018-external-notification.md#proposed-solution)
 
-> ⚠ Pending Changes (Proposed, not yet accepted)
-> - See [ADR-0033](../../adr/ADR-0033-realtime-notification-acceleration.md)
-> - See [Design Note: ADR-0033](../notes/ADR-0033-realtime-notification-acceleration.md)
-> - If accepted, Stage 5.F may add LISTEN/NOTIFY + SSE refresh hints while preserving polling fallback as canonical recovery.
-
 #### Scope Boundary
 
 This stage defines user-visible notification behavior. Channel adapters, delivery retries,
