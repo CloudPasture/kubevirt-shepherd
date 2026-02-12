@@ -2076,6 +2076,11 @@ UI 故事板（父子队列）：
 - [04-governance.md §7 Audit Logging](../../../../design/phases/04-governance.md#7-audit-logging)
 - [RFC-0018 §Proposed Solution](../../../../rfc/RFC-0018-external-notification.md#proposed-solution)
 
+> ⚠ Pending Changes（提案中，尚未接受）
+> - 参见 [ADR-0033](../../../../adr/ADR-0033-realtime-notification-acceleration.md)
+> - 参见 [Design Note: ADR-0033](../../../../design/notes/ADR-0033-realtime-notification-acceleration.md)
+> - 若 ADR-0033 被接受，阶段 5.F 可新增 LISTEN/NOTIFY + SSE 刷新提示能力，同时保留轮询作为规范化兜底路径。
+
 #### Scope Boundary
 
 本节定义用户可见通知行为；渠道适配器、重试策略和供应商集成细节在治理文档与 RFC 中定义。
