@@ -32,6 +32,7 @@ import { Dropdown, Avatar, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/stores/auth';
 import NotificationBell from '@/components/ui/NotificationBell';
+import Link from 'next/link';
 
 const { Text } = Typography;
 
@@ -114,14 +115,21 @@ export default function AppLayout({
 }) {
     const router = useRouter();
     const pathname = usePathname();
-    const { t } = useTranslation('common');
+    const { t, i18n } = useTranslation('common');
     const { user, logout } = useAuthStore();
+
+    // Optimize: Memoize routes to prevent unnecessary re-computations on every render
+    const route = React.useMemo(() => getMenuRoutes(t), [t]);
+
+    const handleLanguageChange = (lang: string) => {
+        i18n.changeLanguage(lang);
+    };
 
     return (
         <ProLayout
             title="Shepherd"
             logo={<img src="/logo-icon.svg" alt="Shepherd" width={32} height={32} />}
-            route={getMenuRoutes(t)}
+            route={route}
             location={{ pathname }}
             fixSiderbar
             fixedHeader
@@ -139,57 +147,88 @@ export default function AppLayout({
                     heightLayoutHeader: 56,
                 },
             }}
-            actionsRender={() => [
-                <NotificationBell key="notifications" />,
-            ]}
             menuItemRender={(item, dom) => (
-                <div
-                    onClick={() => {
-                        if (item.path) {
-                            router.push(item.path);
-                        }
-                    }}
-                >
+                <Link href={item.path || '#'} legacyBehavior={false} style={{ width: '100%', display: 'block' }}>
                     {dom}
-                </div>
+                </Link>
             )}
+            actionsRender={() => [
+                <Dropdown
+                    key="language"
+                    menu={{
+                        items: [
+                            {
+                                key: 'en',
+                                label: 'English',
+                                onClick: () => handleLanguageChange('en'),
+                            },
+                            {
+                                key: 'zh-CN',
+                                label: '简体中文',
+                                onClick: () => handleLanguageChange('zh-CN'),
+                            },
+                        ],
+                        selectedKeys: [i18n.language],
+                    }}
+                    placement="bottomRight"
+                >
+                    <div
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            width: 32,
+                            height: 32,
+                            cursor: 'pointer',
+                            borderRadius: '50%',
+                            transition: 'background-color 0.3s',
+                        }}
+                        className="action-icon"
+                    >
+                        <GlobalOutlined style={{ fontSize: 18 }} />
+                    </div>
+                </Dropdown>,
+                <NotificationBell key="notification" />,
+            ]}
             avatarProps={{
                 src: undefined,
                 title: user?.display_name ?? user?.username ?? 'User',
                 size: 'small',
                 render: (_props, dom) => (
-                    <Dropdown
-                        menu={{
-                            items: [
-                                {
-                                    key: 'username',
-                                    label: (
-                                        <Text strong>
-                                            {user?.display_name ?? user?.username}
-                                        </Text>
-                                    ),
-                                    disabled: true,
-                                },
-                                { type: 'divider' },
-                                {
-                                    key: 'logout',
-                                    icon: <LogoutOutlined />,
-                                    label: t('auth.logout'),
-                                    danger: true,
-                                    onClick: () => {
-                                        logout();
-                                        router.push('/login');
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <Dropdown
+                            menu={{
+                                items: [
+                                    {
+                                        key: 'username',
+                                        label: (
+                                            <Text strong>
+                                                {user?.display_name ?? user?.username}
+                                            </Text>
+                                        ),
+                                        disabled: true,
                                     },
-                                },
-                            ],
-                        }}
-                    >
-                        {dom}
-                    </Dropdown>
+                                    { type: 'divider' },
+                                    {
+                                        key: 'logout',
+                                        icon: <LogoutOutlined />,
+                                        label: t('auth.logout'),
+                                        danger: true,
+                                        onClick: () => {
+                                            logout();
+                                            router.push('/login');
+                                        },
+                                    },
+                                ],
+                            }}
+                        >
+                            {dom}
+                        </Dropdown>
+                    </div>
                 ),
             }}
         >
             {children}
-        </ProLayout>
+        </ProLayout >
     );
 }

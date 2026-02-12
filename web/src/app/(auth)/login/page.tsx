@@ -11,7 +11,7 @@
  *
  * AGENTS.md §6.5: Prevent hydration mismatch without flickering.
  */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, Form, Input, Button, Typography, Space, Alert } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
@@ -44,6 +44,17 @@ export default function LoginPage() {
         }
     };
 
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    // Prevent hydration mismatch by rendering nothing until mounted on client
+    if (!mounted) {
+        return null;
+    }
+
     return (
         <div
             style={{
@@ -71,7 +82,7 @@ export default function LoginPage() {
                     <img
                         src="/logo-wide.svg"
                         alt="Shepherd"
-                        style={{ width: 220, height: 'auto' }}
+                        style={{ height: 64, width: 'auto', maxWidth: '100%' }}
                     />
                     <div>
                         <Title level={3} style={{ marginBottom: 4 }}>
