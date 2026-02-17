@@ -4,7 +4,11 @@ function authStorageState() {
   return JSON.stringify({
     state: {
       token: 'test-token',
-      user: { id: 'user-1', username: 'alice' },
+      user: {
+        id: 'user-1',
+        username: 'alice',
+        permissions: ['platform:admin'],
+      },
       isAuthenticated: true,
     },
     version: 0,
