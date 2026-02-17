@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   unit-tests:
-    name: Unit & Coverage
+    name: Unit & Typecheck
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     defaults:
@@ -37,16 +37,8 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
-      - name: Run coverage
-        run: npm run test:coverage
-
-      - name: Upload coverage artifact
-        if: always()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
-        with:
-          name: web-coverage
-          path: web/coverage/
-          retention-days: 7
+      - name: Run unit tests
+        run: npm run test:run
 
   e2e-tests:
     name: E2E Mock Smoke (Playwright)
