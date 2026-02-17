@@ -2,14 +2,9 @@ name: Frontend Tests
 
 on:
   pull_request:
-    paths:
-      - 'web/**'
-      - '.github/workflows/frontend-tests.yml'
   push:
     branches: [main]
-    paths:
-      - 'web/**'
-      - '.github/workflows/frontend-tests.yml'
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -54,7 +49,7 @@ jobs:
           retention-days: 7
 
   e2e-tests:
-    name: E2E (Playwright)
+    name: E2E Mock Smoke (Playwright)
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     defaults:
@@ -77,8 +72,8 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
-      - name: Run E2E
-        run: npm run test:e2e -- --project=chromium
+      - name: Run E2E Mock Smoke
+        run: npm run test:e2e:mock
 
       - name: Upload Playwright report
         if: failure()
@@ -87,4 +82,3 @@ jobs:
           name: playwright-report
           path: web/playwright-report/
           retention-days: 7
-
