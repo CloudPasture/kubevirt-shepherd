@@ -209,16 +209,12 @@ export function useVMManagementController({ t }: UseVMManagementControllerArgs) 
             return;
         }
         const timer = window.setInterval(() => {
-            setNowMs(Date.now());
+            const now = Date.now();
+            setNowMs(now);
+            setBatchRateLimitUntilMs((current) => (current > 0 && now >= current ? 0 : current));
         }, 1000);
         return () => window.clearInterval(timer);
     }, [batchRateLimitUntilMs]);
-
-    useEffect(() => {
-        if (batchRateLimitUntilMs > 0 && nowMs >= batchRateLimitUntilMs) {
-            setBatchRateLimitUntilMs(0);
-        }
-    }, [batchRateLimitUntilMs, nowMs]);
 
     const batchRetryAfterSeconds = Math.max(0, Math.ceil((batchRateLimitUntilMs - nowMs) / 1000));
     const batchRateLimited = batchRetryAfterSeconds > 0;
