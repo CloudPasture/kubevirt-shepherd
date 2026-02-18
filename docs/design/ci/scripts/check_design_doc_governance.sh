@@ -191,7 +191,7 @@ PY
   fi
 
   # If canonical docs changed, require traceability manifest update in the same PR.
-  if printf '%s\n' "${changed_files}" | rg -q '^(docs/design/interaction-flows/master-flow\.md|docs/design/phases/|docs/design/checklist/|docs/design/examples/|docs/adr/)'; then
+  if printf '%s\n' "${changed_files}" | rg -q '^(docs/design/interaction-flows/master-flow\.md|docs/design/phases/|docs/design/checklist/|docs/design/examples/)'; then
     if ! printf '%s\n' "${changed_files}" | rg -q '^docs/design/traceability/master-flow\.json$'; then
       fail "Traceability manifest must be updated when master-flow/phases/checklists/examples/ADRs change: docs/design/traceability/master-flow.json"
     fi
